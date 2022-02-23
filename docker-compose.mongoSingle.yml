@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  devdbsingle:
+    container_name: devdbsingle_cont
+    image: devdbsingle_img
+    build:
+      context: .
+      dockerfile: ./db/docker/dockerfiles/Dockerfile.single
+    networks:
+      - dev_db_layer
+    ports:
+      - '27018:27017'
+    restart: always
+networks:
+  dev_db_layer:
+    driver: bridge
+volumes:
+  devdbsingledata:

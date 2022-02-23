@@ -3,7 +3,7 @@
 ## Run Base Server
 
 ```bash
-  docker-compose up -f docker-compose.baseServer.yml --build
+  docker-compose -f docker-compose.baseServer.yml up --build
 ```
 
 ## Run Api Gateway with MongoDb backend

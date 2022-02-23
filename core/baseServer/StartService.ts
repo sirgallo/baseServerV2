@@ -1,4 +1,4 @@
-import '@core/modAlias.ts'
+require('module-alias/register')
 
 import { InitBaseServer } from '@core/baseServer/core/InitBaseServer'
 

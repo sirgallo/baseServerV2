@@ -13,7 +13,6 @@ export class MongooseProvider {
     try {
       this.log.info(`Creating default mongo connection at ${this.getNormalizeHost()}`)
       mongoose.connect(this.getNormalizeHost())
-      //mongoose.connect('mongodb://sightuser:sightTestPass@sightdbsingle:27017/SightModels')
       this.log.info(mongoose.connections)
       this.mongoDb = mongoose.connection
       this.dbOn(this.mongoDb)

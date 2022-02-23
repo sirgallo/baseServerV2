@@ -13,7 +13,7 @@ export class InitGatewayServer extends BaseServer {
   
   async startServer() {
     try {
-      const gatewayMongoDb: GatewayMongooseProvider = new GatewayMongooseProvider(mongoTextConfig, mongoDbs.SightModels.name)
+      const gatewayMongoDb: GatewayMongooseProvider = new GatewayMongooseProvider(mongoTextConfig, mongoDbs.devModels.name)
       gatewayMongoDb.initDefault()
       gatewayMongoDb.initDefaultModels()
       this.gatewayLog.success('Initialized Db Models')

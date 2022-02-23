@@ -9,7 +9,7 @@ export const mongoTextConfig: IMongoCredentials= {
 }
 
 export const mongoDbs = {
-  SightModels: {
+  devModels: {
     name: 'devModels',
     collections: {
       User: 'user',

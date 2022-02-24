@@ -1,4 +1,4 @@
-import mongoose, { createConnection, Connection, connection, Schema, Model } from 'mongoose'
+import mongoose, { Connection, Schema } from 'mongoose'
 
 import { IMongoCredentials } from '@core/models/dataAccess/IMongoose'
 import { LogProvider } from '../LogProvider'
@@ -11,9 +11,8 @@ export class MongooseProvider {
 
   initDefault() {
     try {
-      this.log.info(`Creating default mongo connection at ${this.getNormalizeHost()}`)
+      this.log.info(`Creating default mongo connection`)
       mongoose.connect(this.getNormalizeHost())
-      this.log.info(mongoose.connections)
       this.mongoDb = mongoose.connection
       this.dbOn(this.mongoDb)
     } catch (err) {
@@ -40,7 +39,7 @@ export class MongooseProvider {
     return `mongodb://${this.creds.user}:${this.creds.password}@${this.creds.host}:${this.creds.port}/${this.db}`
   }
 
-  private normalizeConnOptions(db? ) {
+  private normalizeConnOptions(db: string) {
     return {
       dbName: db,
       autoIndex: true,
@@ -50,14 +49,5 @@ export class MongooseProvider {
 
   addModel<T>(conn: Connection, db: string, mongoSchema: Schema) { 
     return conn.model<T>(db, mongoSchema)
-  }
-
-  async insert(mongoModelEntry) {
-    try {
-      return await mongoModelEntry.save()
-    } catch (err) {
-      this.log.error(`Error Inserting: ${err}`)
-      throw err
-    }
   }
 }

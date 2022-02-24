@@ -49,3 +49,16 @@ can be used for basic health check implementation without docker
 ## Remove from production
 
   - mongo layer
+
+## Clean up docker containers
+
+```bash
+docker stop $(docker ps -a -q)
+docker rm  $(docker ps -a -q)
+```
+
+## Clean up docker on filesystem
+
+```bash
+docker system prune -a -f
+```

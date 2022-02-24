@@ -44,7 +44,7 @@ can be used for basic health check implementation without docker
 ## Data access providers in `core`
 
   - Mongo (with `mongoose`)
-  - MariaDb (with `sql2`)
+  - MariaDb (with `mysql2`)
 
 ## Remove from production
 

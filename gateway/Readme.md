@@ -8,11 +8,11 @@ Authenticates all requests
 *POST*
 ```json
 {
-  "firstName": "Nick",
-  "lastName": "Gallo",
-  "email": "nickgallo97@gmail.com",
-  "password": "test",
-  "organization": "visible",
+  "firstName": "any",
+  "lastName": "any",
+  "email": "any@gmail.com",
+  "password": "testPass",
+  "organization": "test",
   "accessControlLevel": "Dev"
 }
 ```
@@ -21,7 +21,7 @@ Authenticates all requests
 *POST*
 ```json
 {
-  "email": "nickgallo97@gmail.com",
-  "password": "test"
+  "email": "any@gmail.com",
+  "password": "testPass"
 }
 ```

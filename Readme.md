@@ -40,3 +40,12 @@ can be used for basic health check implementation without docker
 ```bash
   docker-compose -f docker-compose.baseServer.yml up --build
 ```
+
+## Data access providers in `core`
+
+  - Mongo (with `mongoose`)
+  - MariaDb (with `sql2`)
+
+## Remove from production
+
+  - mongo layer

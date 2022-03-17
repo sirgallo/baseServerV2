@@ -53,7 +53,7 @@ export class BaseServer {
   ) {
     this.name = name
     this.log = new LogProvider(this.name)
-    this.log.initFileLogger()
+    this.log.initFileLogger(process.cwd())
     //  default values
     if (! port) this.port = 8000
     if (! version) this.version = '0.1'
@@ -85,7 +85,7 @@ export class BaseServer {
     try { 
       if (this.numOfCpus > 1) {
         if (cluster.isMaster) {
-          this.log.getFileSystem().info(`Welcome to ${this.name}, version ${this.version}, forking workers...`)
+          await this.log.getFileSystem().writeLogToFile(`Welcome to ${this.name}, version ${this.version}, forking workers...`, this.name)
 
           this.ip = BaseServer.setIp(this.log)
           this.app = express()
@@ -96,9 +96,6 @@ export class BaseServer {
             this.timerMap.timerMap.startService.start, 
             this.timerMap.timerMap.startService.stop
           )
-
-          await sleep(4000)
-          this.log.getFileSystem().timer(this.timerMap.timerMap.startService.elapsedInMs)
         } else if (cluster.isWorker) {
           this.app = express()
           this.initApp()
@@ -106,7 +103,7 @@ export class BaseServer {
           this.setUpServer()
         }
       } else if (this.numOfCpus === 1) {
-        this.log.getFileSystem().info(`Welcome to ${this.name}, version ${this.version}\n`)
+        await this.log.getFileSystem().writeLogToFile(`Welcome to ${this.name}, version ${this.version}`, this.name)
 
         this.app = express()
         this.initApp()
@@ -143,7 +140,7 @@ export class BaseServer {
   private initRoutes() {
     for (const route of this.routes) {
       this.app.use(route.rootpath, route.router)
-      this.log.getFileSystem().info(`Route: ${route.name} initialized on Worker ${process.pid}.`)
+      this.log.getFileSystem().writeLogToFile(`Route: ${route.name} initialized on Worker ${process.pid}.`, this.name)
     }
 
     this.app.use( (req, res, next) => {
@@ -158,14 +155,14 @@ export class BaseServer {
     })
   }
 
-  private setUpServer () {
+  private setUpServer() {
     this.app.listen(this.port, () => {
-      this.log.getFileSystem().info(`Server ${process.pid} @${this.ip} listening on port ${this.port}...`)
+      this.log.getFileSystem().writeLogToFile(`Server ${process.pid} @${this.ip} listening on port ${this.port}...`, this.name)
     })
   }
 
-  private setUpWorkers () {
-    this.log.getFileSystem().info(`Server @${this.ip} setting up ${this.numOfCpus} CPUs as workers.\n`)
+  private setUpWorkers() {
+    this.log.getFileSystem().writeLogToFile(`Server @${this.ip} setting up ${this.numOfCpus} CPUs as workers.\n`, this.name)
 
     for(let cpu = 0; cpu < this.numOfCpus; cpu++) {
       const fork = cluster.fork()
@@ -175,7 +172,7 @@ export class BaseServer {
     }
 
     cluster.on('online', worker => {
-      this.log.getFileSystem().info(`Worker ${worker.process.pid} is online.`)
+      this.log.getFileSystem().writeLogToFile(`Worker ${worker.process.pid} is online.`, this.name)
     })
 
     cluster.on('exit', (worker, code, signal) => {
@@ -184,7 +181,7 @@ export class BaseServer {
 
       const fork = cluster.fork()
       fork.on('message', message => {
-        this.log.getFileSystem().info(message)
+        this.log.getFileSystem().writeLogToFile(message, this.name)
       })
     })
   }

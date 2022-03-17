@@ -12,10 +12,10 @@ export class EncryptProvider {
 
   async encrypt(data: string | Buffer): Promise<string> {
     try {
-      this.log.getFileSystem().info(`Encrypting with salt rounds ${this.saltRounds}`)
+      this.log.getFileSystem().writeLogToFile(`Encrypting with salt rounds ${this.saltRounds}`, NAME)
       return await hash(data, this.saltRounds)
     } catch (err) {
-      this.log.getFileSystem().error('Error encrypting data')
+      this.log.getFileSystem().writeLogToFile('Error encrypting data', NAME)
       throw err
     }
   }
@@ -24,7 +24,7 @@ export class EncryptProvider {
     try {
       return await compare(unEncryptedVal, encryptedVal)
     } catch (err) {
-      this.log.getFileSystem().error('Error decrypting data')
+      this.log.getFileSystem().writeLogToFile('Error decrypting data', NAME)
       throw err
     }
   }

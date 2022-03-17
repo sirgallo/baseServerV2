@@ -1,3 +1,5 @@
+const path = require('path')
+
 import { IFileOpOpts } from '@core/models/IFileOp'
 import {
   CustomMessageWrap,
@@ -16,7 +18,7 @@ import { randomUUID } from 'crypto'
 export class LogProvider {
   private log = console.log
   private table = console.table
-  private fileSystemLog: FileSystemLogProvider
+  fileSystemLog: FileSystemLogProvider
   constructor(private baseName: string) {}
 
   initFileLogger(logPath?: string) {
@@ -97,9 +99,9 @@ class FileSystemLogProvider extends LogProvider {
     this.fileOp = new FileOpProvider(this.opts)
   }
 
-  async writeLogToFile(consoleLog: any) {
+  async writeLogToFile(consoleLog: any, provider: string) {
     try {
-      await this.fileOp.writeLogFile(consoleLog, this.fileName, this.logPath)
+      await this.fileOp.writeLogFile(consoleLog, path.normalize(path.join(process.cwd(),`${provider.replace(' ', '')}.${this.fileName}`)), true)
     } catch (err) {
       this.error('Error writing to Log to File.')
       throw err

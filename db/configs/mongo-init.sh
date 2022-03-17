@@ -5,8 +5,8 @@ mongosh <<EOF
 use devModels
 
 db.createUser({
-  user: 'devDevUser',
-  pwd: 'devTestPass',
+  user: 'devModelsUser',
+  pwd: 'devModelsTestPass',
   roles: [
     {
       role: 'readWrite',
@@ -24,10 +24,11 @@ db.createCollection('org', { capped: false });
 use devSystems
 
 db.createCollection('system', { capped: false });
+db.createCollection('authToken', { capped: false })
 
 db.createUser({
-  user: 'devDevUser',
-  pwd: 'devTestPass',
+  user: 'devSystemsDevUser',
+  pwd: 'devSystemsTestPass',
   roles: [
     {
       role: 'readWrite',

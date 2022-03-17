@@ -1,7 +1,7 @@
 const path = require('path')
 
 import { promisify } from 'util'
-import { writeFile, existsSync, readFile, mkdir } from 'fs'
+import { writeFile, existsSync, readFile, mkdir, appendFile } from 'fs'
 import { randomUUID } from 'crypto'
 
 import { LogProvider } from '@core/providers/LogProvider'
@@ -10,6 +10,7 @@ import { IFileOpOpts } from '@core/models/IFileOp'
 export const asyncWriteFile = promisify(writeFile)
 export const asyncReadFile = promisify(readFile)
 export const asyncMkdir = promisify(mkdir)
+export const asyncAppendFile = promisify(appendFile)
 
 export class FileOpProvider {
   private log = new LogProvider('File Op Provider')
@@ -42,14 +43,16 @@ export class FileOpProvider {
     } catch (err) { throw err }  
   }
 
-  async writeLogFile(payload: any, fileName?: string, pathForFile?: string): Promise<string> {
+  async writeLogFile(payload: any, pathForFile?: string, passive?: boolean): Promise<string> {
     const filename = `${randomUUID({ disableEntropyCache: true })}.log`
-    const fullPath =  pathForFile ? path.normalize(path.join(pathForFile, filename)) : path.normalize(path.join(process.cwd(), filename))
-    
+    const fullPath =  pathForFile ? pathForFile : path.normalize(path.join(process.cwd(), filename))
     try {
-      this.log.info(`Attempting to write json payload to this path: ${fullPath}`)
-      await asyncWriteFile(fullPath, payload, this.opts)
-      this.log.success(`File written to ${fullPath}.`)
+      if (! passive) this.log.info(`Attempting to write json payload to this path: ${fullPath}`)
+      if ( ! this.exists(fullPath))
+        await asyncWriteFile(fullPath, `${payload}\n`, this.opts)
+      else 
+        await asyncAppendFile(fullPath,`${payload}\n`, this.opts)
+      if (! passive) this.log.success(`File written to ${fullPath}.`)
 
       return fullPath
     } catch (err) { throw err }
